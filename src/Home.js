@@ -2,21 +2,17 @@ import React, { useState } from "react";
 import "./App.css";
 import styled from "styled-components";
 
-const AppBackground = styled.div`
-  background-color: #fdf0d5;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  top: 0;
-  position: absolute;
+import Tweet from "./Tweet";
+
+export const BoxWrapper = styled.div`
+  border-radius: 5px;
+  padding: 5px;
+  text-align: left;
+  background-color: white;
 `;
 
-function App() {
-  return (
-    <div className="App">
-      <AppBackground></AppBackground>
-    </div>
-  );
+function Home() {
+  return <Tweet />;
 }
 
-export default App;
+export default Home;

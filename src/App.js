@@ -3,6 +3,7 @@ import "./App.css";
 import styled from "styled-components";
 
 import Switch from "./Switch";
+import Home from "./Home";
 
 export const tabs = {
   HOME: "Home",
@@ -22,6 +23,19 @@ const AppBackground = styled.div`
   justify-content: center;
   font-family: "Roboto", sans-serif;
 `;
+const ContentBackground = styled.div`
+  position: absolute;
+  top: 20%;
+  background-color: #ddbea9;
+  width: 90%;
+  height: 75%;
+  padding: 10px;
+  border-radius: 10px;
+`;
+const Title = styled.h1`
+  font-family: "Josefin Sans", sans-serif;
+  text-transform: uppercase;
+`;
 
 function App() {
   const [tab, setTab] = useState(tabs.HOME);
@@ -29,12 +43,17 @@ function App() {
   return (
     <div className="App">
       <AppBackground>
+        <Title>Sentiment Analysis on Tweets</Title>
         <Switch setTab={setTab} tab={tab} />
-        {tab === tabs.HOME
-          ? "home"
-          : tab === tabs.SEARCH
-          ? "search"
-          : "display"}
+        <ContentBackground>
+          {tab === tabs.HOME ? (
+            <Home />
+          ) : tab === tabs.SEARCH ? (
+            "search"
+          ) : (
+            "display"
+          )}
+        </ContentBackground>
       </AppBackground>
     </div>
   );
