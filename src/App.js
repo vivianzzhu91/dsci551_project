@@ -26,7 +26,7 @@ const AppBackground = styled.div`
 const ContentBackground = styled.div`
   position: absolute;
   top: 20%;
-  background-color: #ddbea9;
+  background-color: #eeeeee;
   width: 90%;
   height: 75%;
   padding: 10px;

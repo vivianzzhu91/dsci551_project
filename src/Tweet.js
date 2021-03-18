@@ -10,7 +10,6 @@ const Item = styled.li`
   border-bottom: 1px solid #e2e2e2;
   counter-increment: item;
   margin-top: 5px;
-
   :before {
     margin-right: 10px;
     content: counter(item);
@@ -22,6 +21,12 @@ const Item = styled.li`
     font-size: 15px;
   }
 `;
+const Text = styled.div`
+  width: 300px;
+  overflow-wrap: break-word;
+  white-space: normal;
+  display: inline-block;
+`;
 const Date = styled.div`
   color: #a9a9a9;
   margin-left: 28px;
@@ -30,40 +35,95 @@ const Date = styled.div`
 `;
 const Tag = styled.div`
   border-radius: 3px;
-  background-color: #f6f4d2;
-  color: #2ec4b6;
-  width: 80px;
+  border: 1px solid #0077b6;
+  background-color: #caf0f8;
+  color: #0077b6;
+  width: 90px;
   height: 30px;
   float: right;
   display: flex;
   justify-content: center;
-  padding-top: 8px;
+  margin-right: 10px;
+  font-size: 12px;
+  vertical-align: center;
+  align-items: center;
+`;
+const PositiveTag = styled(Tag)`
+  border: 1px solid #87986a;
+  background-color: #e9f5db;
+  color: #87986a;
+`;
+const NegativeTag = styled(Tag)`
+  border: 1px solid #8a2846;
+  background-color: #ffe0e9;
+  color: #8a2846;
+`;
+const Bar = styled.div`
+  border-bottom: 1px solid #e2e2e2;
+  padding: 10px 0 10px 30px;
 `;
 
 function Tweet() {
   const Wrapper = styled(BoxWrapper)`
-    width: 700px;
+    width: 650px;
+    height: 650px;
+    padding-right: 20px;
+    overflow-y: scroll;
   `;
 
   return (
     <Wrapper className="tweet">
+      <Bar>
+        <Text>234 Tweets</Text>
+      </Bar>
       <ol>
         <Item>
-          love your app!
+          <Text>love your app!</Text>
+          <PositiveTag>Positive</PositiveTag>
           <Tag>Covid</Tag>
           <Date>Jan 19, 2021</Date>
         </Item>
         <Item>
-          It's not user friendly at all
+          <Text>It's not user friendly at all</Text>
+          <PositiveTag>Positive</PositiveTag>
+          <Tag>Online Class</Tag>
           <Date>Jan 19, 2021</Date>
         </Item>
         <Item>
-          The App is coming from no where
+          <Text>The App is coming from no where</Text>
+          <NegativeTag>Negative</NegativeTag>
           <Date>Jan 19, 2021</Date>
         </Item>
         <Item>
-          Is it cost-effective to write this really long long long long test
-          methods
+          <Text>
+            Is it cost-effective to write this really long long long long test
+            methods
+          </Text>
+          <PositiveTag>Positive</PositiveTag>
+          <Date>Jan 19, 2021</Date>
+        </Item>
+        <Item>
+          <Text>
+            Is it cost-effective to write this really long long long long test
+            methods
+          </Text>
+          <PositiveTag>Positive</PositiveTag>
+          <Date>Jan 19, 2021</Date>
+        </Item>
+        <Item>
+          <Text>
+            Is it cost-effective to write this really long long long long test
+            methods
+          </Text>
+          <PositiveTag>Positive</PositiveTag>
+          <Date>Jan 19, 2021</Date>
+        </Item>
+        <Item>
+          <Text>
+            Is it cost-effective to write this really long long long long test
+            methods
+          </Text>
+          <PositiveTag>Positive</PositiveTag>
           <Date>Jan 19, 2021</Date>
         </Item>
       </ol>

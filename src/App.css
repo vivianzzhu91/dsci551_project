@@ -81,4 +81,5 @@
 .tweet ol {
   list-style-type: decimal;
   counter-reset: item;
+  padding: 0;
 }
