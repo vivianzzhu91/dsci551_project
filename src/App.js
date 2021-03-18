@@ -1,33 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import styled from "styled-components";
+
+import Switch from "./Switch";
+
+export const tabs = {
+  HOME: "Home",
+  SEARCH: "search",
+  DISPLAY: "display",
+};
+
+const AppBackground = styled.div`
+  background-color: #fdf0d5;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+`;
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(0);
-
-  useEffect(() => {
-    fetch('/time').then(res => res.json()).then(data => {
-      setCurrentTime(data.time);
-    });
-  }, []);
+  const [tab, setTab] = useState(tabs.HOME);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>The current time is {currentTime}.</p>
-      </header>
+      <AppBackground>
+        <Switch setTab={setTab} tab={tab} />
+        {tab === tabs.HOME
+          ? "home"
+          : tab === tabs.SEARCH
+          ? "search"
+          : "display"}
+      </AppBackground>
     </div>
   );
 }
