@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import Switch from "./Switch";
 import Home from "./Home";
+import Search from "./Search";
 
 export const tabs = {
   HOME: "Home",
@@ -38,7 +39,7 @@ const Title = styled.h1`
 `;
 
 function App() {
-  const [tab, setTab] = useState(tabs.HOME);
+  const [tab, setTab] = useState(tabs.SEARCH);
 
   return (
     <div className="App">
@@ -49,7 +50,7 @@ function App() {
           {tab === tabs.HOME ? (
             <Home />
           ) : tab === tabs.SEARCH ? (
-            "search"
+            <Search />
           ) : (
             "display"
           )}
