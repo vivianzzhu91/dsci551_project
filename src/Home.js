@@ -3,6 +3,7 @@ import "./App.css";
 import styled from "styled-components";
 
 import Tweet from "./Tweet";
+import SentimentGraph from "./SentimentGraph";
 
 export const BoxWrapper = styled.div`
   border-radius: 5px;
@@ -10,9 +11,17 @@ export const BoxWrapper = styled.div`
   text-align: left;
   background-color: white;
 `;
+const HomeWrapper = styled(BoxWrapper)`
+  display: flex;
+`;
 
 function Home() {
-  return <Tweet />;
+  return (
+    <HomeWrapper>
+      <Tweet />
+      <SentimentGraph />
+    </HomeWrapper>
+  );
 }
 
 export default Home;

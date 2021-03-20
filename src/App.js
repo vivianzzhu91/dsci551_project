@@ -39,7 +39,7 @@ const Title = styled.h1`
 `;
 
 function App() {
-  const [tab, setTab] = useState(tabs.SEARCH);
+  const [tab, setTab] = useState(tabs.HOME);
 
   return (
     <div className="App">
