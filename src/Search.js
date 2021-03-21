@@ -58,16 +58,6 @@ function Search() {
     },
   });
 
-  const renderSelectionValue = () => {
-    return (
-      <>
-        {time.selection.startDate.toDateString()}
-        {' - '}
-        {time.selection.endDate.toDateString()}
-      </>
-    );
-  };
-
   return (
     <Wrapper>
       <form onSubmit={() => {}}>
@@ -93,7 +83,10 @@ function Search() {
           </div>
           <div className="mb-3">
             <FormTitle>Select Time Range:</FormTitle>
-            <span>{renderSelectionValue()}</span>
+            <span>
+              {time.selection.startDate.toDateString()} -
+              {time.selection.endDate.toDateString()}
+            </span>
             <Toggle
               onClick={() => {
                 setIsOpen(!isOpen);
