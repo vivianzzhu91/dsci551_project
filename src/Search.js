@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import "./App.css";
-import styled from "styled-components";
-import "react-date-range/dist/styles.css"; // main css file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import React, { useState } from 'react';
+import './App.css';
+import styled from 'styled-components';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
-import { addDays } from "date-fns";
-import { DateRangePicker } from "react-date-range";
-import { BoxWrapper } from "./Home";
+import { addDays } from 'date-fns';
+import { DateRangePicker } from 'react-date-range';
+import BoxWrapper from './util/BoxWrapper';
 
 const sentiment = {
-  POSITIVE: "positive",
-  NEGATIVE: "negative",
-  NEUTRAL: "neutral",
+  POSITIVE: 'positive',
+  NEGATIVE: 'negative',
+  NEUTRAL: 'neutral',
 };
 
 const FormWrapper = styled.div`
@@ -47,21 +47,22 @@ function Search() {
     width: 100%;
     height: 40%;
   `;
+  // eslint-disable-next-line no-unused-vars
   const [sent, setSent] = useState(sentiment.POSITIVE);
   const [isOpen, setIsOpen] = useState(false);
   const [time, setTime] = useState({
     selection: {
       startDate: addDays(new Date(), -300),
       endDate: new Date(),
-      key: "selection",
+      key: 'selection',
     },
   });
 
-  let renderSelectionValue = () => {
+  const renderSelectionValue = () => {
     return (
       <>
         {time.selection.startDate.toDateString()}
-        {" - "}
+        {' - '}
         {time.selection.endDate.toDateString()}
       </>
     );
@@ -74,16 +75,19 @@ function Search() {
         <FormWrapper>
           <div className="mb-3">
             <FormTitle>Select Sentiment:</FormTitle>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label className="me-3">
-              <input type="checkbox" class="option-input checkbox" />
+              <input type="checkbox" className="option-input checkbox" />
               Positive
             </label>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label className="me-3">
-              <input type="checkbox" class="option-input checkbox" />
+              <input type="checkbox" className="option-input checkbox" />
               Negative
             </label>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label className="me-3">
-              <input type="checkbox" class="option-input checkbox" />
+              <input type="checkbox" className="option-input checkbox" />
               Neutral
             </label>
           </div>

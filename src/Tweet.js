@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import "./App.css";
-import styled from "styled-components";
+import React from 'react';
+import './App.css';
+import styled from 'styled-components';
 
-import { BoxWrapper } from "./Home";
+import BoxWrapper from './util/BoxWrapper';
 
 const Item = styled.li`
   padding: 10px 5px 10px 5px;
@@ -84,7 +84,7 @@ function Tweet() {
           <Date>Jan 19, 2021</Date>
         </Item>
         <Item>
-          <Text>It's not user friendly at all</Text>
+          <Text>It&apos;s not user friendly at all</Text>
           <PositiveTag>Positive</PositiveTag>
           <Tag>Online Class</Tag>
           <Date>Jan 19, 2021</Date>
