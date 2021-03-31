@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
@@ -52,9 +52,42 @@ const options = {
 };
 
 function SentimentGraph() {
+  const [sentimentData, setSentimentData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Positive',
+        data: [],
+        fill: false,
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgba(255, 99, 132, 0.2)',
+        yAxisID: 'y-axis-1',
+      },
+      {
+        label: 'Negative',
+        data: [],
+        fill: false,
+        backgroundColor: 'rgb(54,162,235)',
+        borderColor: 'rgba(54, 162, 235, 0.2)',
+      },
+      {
+        label: 'Neutral',
+        data: [],
+        fill: false,
+        backgroundColor: '#e29578',
+        borderColor: '#d4a373',
+      },
+    ],
+  });
+
+  useEffect(() => {
+    sentimentOverTime().then((res) => {
+      setSentimentData(res);
+    });
+  }, []);
   return (
     <Wrapper>
-      <Line data={sentimentOverTime()} options={options} />
+      <Line data={sentimentData} options={options} />
     </Wrapper>
   );
 }
