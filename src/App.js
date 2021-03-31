@@ -31,6 +31,7 @@ const ContentBackground = styled.div`
 const Title = styled.h1`
   font-family: 'Josefin Sans', sans-serif;
   text-transform: uppercase;
+  margin-top: 15px;
 `;
 
 function App() {

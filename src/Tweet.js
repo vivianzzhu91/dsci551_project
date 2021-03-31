@@ -66,7 +66,6 @@ const Bar = styled.div`
 function Tweet() {
   const Wrapper = styled(BoxWrapper)`
     width: 650px;
-    height: 650px;
     padding-right: 20px;
     overflow-y: scroll;
   `;

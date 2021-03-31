@@ -8,6 +8,7 @@ import SentimentGraph from './SentimentGraph';
 
 const HomeWrapper = styled(BoxWrapper)`
   display: flex;
+  height: 100%;
 `;
 
 function Home() {
