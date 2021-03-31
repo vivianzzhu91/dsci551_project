@@ -60,9 +60,12 @@
   padding: 10px;
   margin: 10px;
 }
-.switchTab li:hover::after,
-.switchTab .active::after {
-  content: " ";
+.switchTab li a {
+  text-decoration: none;
+  color: white;
+}
+.is-active::after {
+  content: ' ';
   display: block;
   border: 2px solid #003049;
   border-radius: 4px;
@@ -71,11 +74,8 @@
   text-align: center;
   margin-left: 20%;
 }
-.switchTab li:hover {
-  color: #003049;
-  cursor: pointer;
-}
-.switchTab .active {
+.switchTab,
+.is-active {
   color: #003049 !important;
 }
 .tweet ol {
@@ -134,7 +134,7 @@
   height: 30px;
   width: 30px;
   position: absolute;
-  content: "✔";
+  content: '✔';
   display: inline-block;
   font-size: 26.66667px;
   text-align: center;
@@ -145,7 +145,7 @@
   -moz-animation: click-wave 0.65s;
   animation: click-wave 0.65s;
   background: #efd3d7;
-  content: "";
+  content: '';
   display: block;
   position: relative;
   z-index: 100;

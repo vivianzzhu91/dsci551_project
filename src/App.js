@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, HashRouter as Router, Switch, Link } from 'react-router-dom';
+import { Route, HashRouter as Router, Switch, NavLink } from 'react-router-dom';
 import './App.css';
 import styled from 'styled-components';
 
@@ -42,13 +42,19 @@ function App() {
           <div className="switchTab">
             <ul>
               <li className="home">
-                <Link to="/">Home</Link>
+                <NavLink exact to="/" activeClassName="is-active">
+                  Home
+                </NavLink>
               </li>
               <li className="search">
-                <Link to="/search">Search</Link>
+                <NavLink to="/search" activeClassName="is-active">
+                  Search
+                </NavLink>
               </li>
               <li className="display">
-                <Link to="/display">Display</Link>
+                <NavLink to="/display" activeClassName="is-active">
+                  Display
+                </NavLink>
               </li>
             </ul>
           </div>
