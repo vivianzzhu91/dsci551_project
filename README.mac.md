@@ -113,10 +113,12 @@ check whether there is any error message, especially in the consumer's terminal 
 
 ### Create an Index Pattern
 You can follow the [instructions](https://www.elastic.co/guide/en/kibana/current/index-patterns.html) to create an index pattern named `twitter-stream`. After that, you can see something like this:
+
 ![](img/kibana-index-pattern.png)
 
 ### Create a Visualization
 You can follow the [instructions](https://www.elastic.co/guide/en/kibana/7.12/create-a-dashboard-of-panels-with-web-server-data.html) to create visualizations that you think make sense. I have created something like this:
+
 ![](img/kibana-dashboard.png)
 
 ### Embed the Code in Web Pages
@@ -131,3 +133,10 @@ That means you need to set the following environment variable due to added secur
 ```
 OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 ```
+
+## TODO
+- [ ] add filter logic to only allow messages with prespecified tags
+- [ ] make kibana displays local time instead of utc time 
+- [ ] chart a workflow diagram similar to one in the following: 
+
+![](img/exmaple-workflow.jpeg)
