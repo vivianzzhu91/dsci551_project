@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import styled from 'styled-components';
-
+import elasticsearch from 'elasticsearch';
 import BoxWrapper from './util/BoxWrapper';
 
 const Item = styled.li`
@@ -69,6 +69,27 @@ function Tweet() {
     padding-right: 20px;
     overflow-y: scroll;
   `;
+  const client = elasticsearch.Client({
+    host: 'http://localhost:9200/',
+  });
+  client.search(
+    {
+      index: 'twitter-stream',
+      body: {
+        query: {
+          match: {
+            user: 'Amirm15625567',
+          },
+        },
+      },
+    },
+    (err, result) => {
+      if (err) console.log(err);
+      if (result) {
+        console.log(result);
+      }
+    },
+  );
 
   return (
     <Wrapper className="tweet">
