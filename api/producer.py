@@ -21,8 +21,8 @@ TAGS = ['#Coronavirus', '#SARSCoV2', '#quarantinelife', '#stayathomechallenge',
 
 def clean(tweet):
     rawtweet = json.loads(tweet)
-    tweet = {'date': datetime.strptime(rawtweet["created_at"], '%a %b %d %H:%M:%S %z %Y') \
-        .replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%Y-%m-%d %H:%M:%S'),
+    tweet = {'date': datetime.strptime(rawtweet["created_at"], '%a %b %d %H:%M:%S %z %Y')
+             .replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%Y-%m-%d %H:%M:%S'),
              "user": rawtweet["user"]["screen_name"],
              "tags": [hashtag['text'] for hashtag in rawtweet["entities"]["hashtags"]]}
     if "extended_tweet" in rawtweet:
@@ -51,7 +51,8 @@ class TwitterStreamListener(StreamListener):
 if __name__ == '__main__':
     auth = OAuthHandler(API_KEY, API_SECRET)
     auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    producer = KafkaProducer(bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS)
+    producer = KafkaProducer(
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS, api_version=(0, 10, 1))
     listener = TwitterStreamListener(producer=producer, topic='twitter-stream')
     stream = Stream(auth=auth, listener=listener)
     stream.filter(track=TAGS, languages=['en'])

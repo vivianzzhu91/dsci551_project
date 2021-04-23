@@ -1,13 +1,13 @@
+from visualization import data2elastic
+from pyspark.sql.types import StringType, StructType, StructField, ArrayType
+from pyspark.sql.functions import from_json, udf
+from pyspark.sql import SparkSession
+# from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 from datetime import datetime
+import nltk
+nltk.download('vader_lexicon')
 
-from nltk.sentiment import SentimentIntensityAnalyzer
-
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, udf
-from pyspark.sql.types import StringType, StructType, StructField, ArrayType
-
-from visualization import data2elastic
 
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 
@@ -42,6 +42,8 @@ def process(df, id):
 
 if __name__ == '__main__':
     spark = SparkSession.builder.appName("TwitterSparkStreaming").getOrCreate()
+    # .config(
+    # "spark.driver.host", "172.20.50.98").config("spark.driver.bindAddress", "172.20.50.98")
     spark.sparkContext.setLogLevel("ERROR")
 
     print("kafka consumer start...")
@@ -53,10 +55,12 @@ if __name__ == '__main__':
         .option("subscribe", "twitter-stream").load()
 
     # convert raw_df value column using json formatter to convert into json struct
-    json_df = raw_df.select(from_json(raw_df.value.cast('string'), JSON_SCHEMA).alias('json'))
+    json_df = raw_df.select(
+        from_json(raw_df.value.cast('string'), JSON_SCHEMA).alias('json'))
 
     # flatten the json_df's columns for further processing
-    json_flatten_df = json_df.selectExpr('json.date', 'json.user', 'json.text', 'json.tags')
+    json_flatten_df = json_df.selectExpr(
+        'json.date', 'json.user', 'json.text', 'json.tags')
 
     # filter out retweets
     filtered_df = json_flatten_df.filter("text not like 'RT @%'")
@@ -65,7 +69,8 @@ if __name__ == '__main__':
     udf_func = udf(lambda x: sentiment(x), returnType=StringType())
 
     # create a new column by applying the function to each tweet
-    res_df = json_flatten_df.withColumn("sentiment", udf_func(json_flatten_df.text))
+    res_df = json_flatten_df.withColumn(
+        "sentiment", udf_func(json_flatten_df.text))
 
     # output to console
     console_output = res_df.writeStream.foreachBatch(process).start()
