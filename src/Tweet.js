@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import elasticsearch from 'elasticsearch';
@@ -58,46 +59,94 @@ const NegativeTag = styled(Tag)`
   background-color: #ffe0e9;
   color: #8a2846;
 `;
+const NeutralTag = styled(Tag)`
+  border: 1px solid #bc6c25;
+  background-color: #ffe5d9;
+  color: #bc6c25;
+`;
 const Bar = styled.div`
   border-bottom: 1px solid #e2e2e2;
   padding: 10px 0 10px 30px;
 `;
+const Wrapper = styled(BoxWrapper)`
+  width: 650px;
+  padding-right: 20px;
+  overflow-y: scroll;
+`;
+
+const client = elasticsearch.Client({
+  host: 'http://localhost:9200/',
+});
+
+const getSentiment = (sentiment) => {
+  const max = Math.max(
+    Math.abs(sentiment.pos),
+    Math.abs(sentiment.neg),
+    Math.abs(sentiment.neu),
+  );
+  const res =
+    max === sentiment.neg ? (
+      <NegativeTag>Negative</NegativeTag>
+    ) : (
+      <NeutralTag>Neutral</NeutralTag>
+    );
+  return max === sentiment.pos ? <PositiveTag>Positive</PositiveTag> : res;
+};
 
 function Tweet() {
-  const Wrapper = styled(BoxWrapper)`
-    width: 650px;
-    padding-right: 20px;
-    overflow-y: scroll;
-  `;
-  const client = elasticsearch.Client({
-    host: 'http://localhost:9200/',
-  });
-  client.search(
-    {
-      index: 'twitter-stream',
-      body: {
-        query: {
-          match: {
-            user: 'Amirm15625567',
-          },
-        },
-      },
-    },
-    (err, result) => {
-      if (err) console.log(err);
-      if (result) {
-        console.log(result);
-      }
-    },
-  );
+  // eslint-disable-next-line no-unused-vars
+  const [myHits, setMyHits] = useState([]);
+
+  useEffect(() => {
+    client
+      .search({
+        index: 'twitter-stream',
+        from: 0,
+        size: 20,
+        body: {},
+      })
+      .then((data) => {
+        // eslint-disable-next-line prefer-destructuring
+        const hits = data.hits.hits;
+        const res = [];
+        hits.forEach((item) => {
+          const src = item._source;
+          res.push({
+            id: item._id,
+            date: src.date,
+            text: src.text,
+            user: src.user,
+            sentiment: src.sentiment,
+            tags: src.tags,
+          });
+        });
+        setMyHits(res);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log('here', myHits);
+  }, [myHits]);
 
   return (
     <Wrapper className="tweet">
       <Bar>
-        <Text>234 Tweets</Text>
+        <Text>Latest 20 Tweets</Text>
       </Bar>
       <ol>
-        <Item>
+        {myHits.map((tweet) => {
+          return (
+            <Item key={tweet.id}>
+              <Text>{tweet.text}</Text>
+              {getSentiment(tweet.sentiment)}
+              {tweet.tags.map((tag) => {
+                return <Tag key={tag}>{tag}</Tag>;
+              })}
+              <Date>{tweet.date}</Date>
+            </Item>
+          );
+        })}
+        {/* <Item>
           <Text>love your app!</Text>
           <PositiveTag>Positive</PositiveTag>
           <Tag>Covid</Tag>
@@ -145,7 +194,7 @@ function Tweet() {
           </Text>
           <PositiveTag>Positive</PositiveTag>
           <Date>Jan 19, 2021</Date>
-        </Item>
+        </Item> */}
       </ol>
     </Wrapper>
   );
