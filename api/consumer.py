@@ -32,6 +32,17 @@ def sentiment(tweet):
     return json.dumps(scores)
 
 
+def emotion(field):
+    e = 'positive'
+    scores = json.loads(field)
+    max_val = max(scores['pos'], scores['neg'], scores['neu'])
+    if max_val == scores['neg']:
+        e = 'negative'
+    elif max_val == scores['neu']:
+        e = 'neutral'
+
+    return e
+
 def process(df, id):
     results = df.toJSON().map(lambda j: json.loads(j)).collect()
     for result in results:
@@ -71,6 +82,12 @@ if __name__ == '__main__':
     # create a new column by applying the function to each tweet
     res_df = json_flatten_df.withColumn(
         "sentiment", udf_func(json_flatten_df.text))
+
+    # create a function to extra emotion from tweets
+    emotion_func = udf(lambda x: emotion(x), returnType=StringType())
+
+    # create a new column to extract the emotion in text
+    res_df = res_df.withColumn("emotion", emotion_func(res_df.sentiment))
 
     # output to console
     console_output = res_df.writeStream.foreachBatch(process).start()
