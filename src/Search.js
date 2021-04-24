@@ -37,7 +37,7 @@ const Button = styled.button`
   }
 `;
 const Toggle = styled(Button)`
-  margin: 0 0 0 20px;
+  /* margin: 0 0 0 20px; */
 `;
 const Wrapper = styled(BoxWrapper)`
   padding-top: 20px;
@@ -235,82 +235,98 @@ function Search() {
       <form onSubmit={() => {}}>
         <h5 className="mb-3">Search Form</h5>
         <FormWrapper>
-          <div className="mb-3">
-            <FormTitle>Select Sentiment:</FormTitle>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className="me-3" value="positive">
-              <input
-                type="checkbox"
-                className="option-input checkbox"
-                onChange={(e) => {
-                  toggleSentiment(e, 'positive');
-                }}
-              />
-              Positive
-            </label>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className="me-3">
-              <input
-                type="checkbox"
-                className="option-input checkbox"
-                onChange={(e) => {
-                  toggleSentiment(e, 'negative');
-                }}
-              />
-              Negative
-            </label>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className="me-3">
-              <input
-                type="checkbox"
-                className="option-input checkbox"
-                onChange={(e) => {
-                  toggleSentiment(e, 'neutral');
-                }}
-              />
-              Neutral
-            </label>
+          <div className="row mb-3">
+            <div className="col-4">
+              <FormTitle>Select Sentiment:</FormTitle>
+            </div>
+            <div className="col-8">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label className="me-3" value="positive">
+                <input
+                  type="checkbox"
+                  className="option-input checkbox"
+                  onChange={(e) => {
+                    toggleSentiment(e, 'positive');
+                  }}
+                />
+                Positive
+              </label>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label className="me-3">
+                <input
+                  type="checkbox"
+                  className="option-input checkbox"
+                  onChange={(e) => {
+                    toggleSentiment(e, 'negative');
+                  }}
+                />
+                Negative
+              </label>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label className="me-3">
+                <input
+                  type="checkbox"
+                  className="option-input checkbox"
+                  onChange={(e) => {
+                    toggleSentiment(e, 'neutral');
+                  }}
+                />
+                Neutral
+              </label>
+            </div>
           </div>
-          <div className="mb-3">
-            <FormTitle>Limit count:</FormTitle>
-            <select
-              id="dropdown"
-              value={limit}
-              onChange={(e) => {
-                setLimit(e.target.value);
-              }}
-            >
-              <option value="N/A" disabled="disabled">
-                Select limit count
-              </option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="200">200</option>
-            </select>
+          <div className="row mb-3">
+            <div className="col-4">
+              <FormTitle>Limit count:</FormTitle>
+            </div>
+            <div className="col-8">
+              <select
+                id="dropdown"
+                value={limit}
+                onChange={(e) => {
+                  setLimit(e.target.value);
+                }}
+              >
+                <option value="N/A" disabled="disabled">
+                  Select limit count
+                </option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="200">200</option>
+              </select>
+            </div>
           </div>
-          <div className="mb-3">
-            <FormTitle>Sort by date:</FormTitle>
-            <select
-              id="dropdown"
-              value={sort}
-              onChange={(e) => {
-                setSort(e.target.value);
-              }}
-            >
-              <option value="N/A" disabled="disabled">
-                Sort
-              </option>
-              <option value="asc">ascending</option>
-              <option value="desc">descending</option>
-            </select>
+          <div className="row mb-3">
+            <div className="col-4">
+              <FormTitle>Sort by date:</FormTitle>
+            </div>
+            <div className="col-8">
+              <select
+                id="dropdown"
+                value={sort}
+                onChange={(e) => {
+                  setSort(e.target.value);
+                }}
+              >
+                <option value="N/A" disabled="disabled">
+                  Sort
+                </option>
+                <option value="asc">ascending</option>
+                <option value="desc">descending</option>
+              </select>
+            </div>
           </div>
-          <div className="mb-3">
-            <FormTitle>Select Time Range:</FormTitle>
-            <span>
-              {time.selection.startDate.toDateString()} -
-              {time.selection.endDate.toDateString()}
-            </span>
+          <div className="row mb-3">
+            <div className="col-4">
+              <FormTitle>Select Time Range:</FormTitle>
+            </div>
+            <div className="col-8">
+              <span>
+                {time.selection.startDate.toDateString()} -
+                {time.selection.endDate.toDateString()}
+              </span>
+            </div>
             <Toggle
               onClick={() => {
                 setIsOpen(!isOpen);
