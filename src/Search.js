@@ -6,10 +6,12 @@ import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import elasticsearch from 'elasticsearch';
 
+import moment from 'moment';
 import { addDays } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
 import BoxWrapper from './util/BoxWrapper';
 import SearchGraph from './SearchGraph';
+import Tweet from './Tweet';
 
 const FormWrapper = styled.div`
   width: 75%;
@@ -59,10 +61,12 @@ const getRandomColor = () => {
 };
 
 function Search() {
+  const [isSearching, setIsSearching] = useState(false);
   const [sent, setSent] = useState([]);
   const [limit, setLimit] = useState(10);
   const [sort, setSort] = useState('desc');
   const [isOpen, setIsOpen] = useState(false);
+  const [myHits, setMyHits] = useState([]);
   const [time, setTime] = useState({
     selection: {
       startDate: addDays(new Date(), -7),
@@ -122,7 +126,7 @@ function Search() {
     };
     data.forEach((item) => {
       const resp = item._source;
-      const date = resp.date.slice(0, 10);
+      const date = moment(resp.date).format('YYYY-MM-DD HH:mm');
       result.labels.push(date);
       result.datasets[0].data.push(resp.sentiment.pos);
       result.datasets[1].data.push(resp.sentiment.neg);
@@ -161,6 +165,23 @@ function Search() {
       ],
     };
     setTagCountData(res);
+  };
+
+  const getTweet = (data) => {
+    const { hits } = data.hits;
+    const res = [];
+    hits.forEach((item) => {
+      const src = item._source;
+      res.push({
+        id: item._id,
+        date: src.date,
+        text: src.text,
+        user: src.user,
+        sentiment: src.sentiment,
+        tags: src.tags,
+      });
+    });
+    setMyHits(res);
   };
 
   const search = (e) => {
@@ -202,7 +223,9 @@ function Search() {
       .then((data) => {
         convertGraphData(data.hits.hits);
         convertDoughnutData(data.hits.hits);
-        console.log(data.hits.hits);
+        getTweet(data);
+        setIsSearching(true);
+        // console.log(data.hits.hits);
       });
     e.preventDefault();
   };
@@ -246,42 +269,6 @@ function Search() {
                 }}
               />
               Neutral
-            </label>
-          </div>
-          <div className="mb-3">
-            <FormTitle>Select Tags:</FormTitle>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className="me-3" value="positive">
-              <input
-                type="checkbox"
-                className="option-input checkbox"
-                onChange={(e) => {
-                  toggleSentiment(e, 'positive');
-                }}
-              />
-              Covid19
-            </label>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className="me-3">
-              <input
-                type="checkbox"
-                className="option-input checkbox"
-                onChange={(e) => {
-                  toggleSentiment(e, 'negative');
-                }}
-              />
-              lockdown
-            </label>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className="me-3">
-              <input
-                type="checkbox"
-                className="option-input checkbox"
-                onChange={(e) => {
-                  toggleSentiment(e, 'neutral');
-                }}
-              />
-              coronavirus
             </label>
           </div>
           <div className="mb-3">
@@ -353,15 +340,30 @@ function Search() {
         >
           Search
         </Button>
+        <Button
+          className="mx-3"
+          onClick={() => {
+            setIsSearching(false);
+          }}
+        >
+          Clear
+        </Button>
       </form>
-      <div className="row">
-        <div className="col-12">
-          <SearchGraph
-            searchGraphData={searchGraphData}
-            tagCountData={tagCountData}
-          />
+      {isSearching ? (
+        <div className="row">
+          <div className="col-12">
+            <SearchGraph
+              searchGraphData={searchGraphData}
+              tagCountData={tagCountData}
+            />
+          </div>
+          <div className="col-12">
+            <Tweet myHits={myHits} />
+          </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
     </Wrapper>
   );
 }

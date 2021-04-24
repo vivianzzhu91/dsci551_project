@@ -67,7 +67,7 @@ const Bar = styled.div`
   padding: 10px 0 10px 30px;
 `;
 const Wrapper = styled(BoxWrapper)`
-  width: 650px;
+  width: 100%;
   padding-right: 20px;
   overflow-y: scroll;
 `;

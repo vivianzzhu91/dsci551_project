@@ -47,8 +47,14 @@ function Home() {
   }, []);
   return (
     <HomeWrapper>
-      <Tweet myHits={myHits} />
-      <SentimentGraph />
+      <div className="row">
+        <div className="col-6">
+          <Tweet myHits={myHits} />
+        </div>
+        <div className="col-6">
+          <SentimentGraph />
+        </div>
+      </div>
     </HomeWrapper>
   );
 }
