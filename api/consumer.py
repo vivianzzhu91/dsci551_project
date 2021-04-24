@@ -2,7 +2,7 @@ from visualization import data2elastic
 from pyspark.sql.types import StringType, StructType, StructField, ArrayType
 from pyspark.sql.functions import from_json, udf
 from pyspark.sql import SparkSession
-# from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 from datetime import datetime
 import nltk

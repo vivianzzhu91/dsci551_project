@@ -2,6 +2,7 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 from kafka import KafkaProducer
 from datetime import datetime, timezone
+from dateutil.tz import tzlocal
 
 from tweepy.streaming import StreamListener
 import json
@@ -22,7 +23,7 @@ TAGS = ['#Coronavirus', '#SARSCoV2', '#quarantinelife', '#stayathomechallenge',
 def clean(tweet):
     rawtweet = json.loads(tweet)
     tweet = {'date': datetime.strptime(rawtweet["created_at"], '%a %b %d %H:%M:%S %z %Y')
-             .replace(tzinfo=timezone.utc).astimezone(tz=None).strftime('%Y-%m-%d %H:%M:%S'),
+             .replace(tzinfo=tzlocal()).astimezone(tz=None).strftime('%Y-%m-%d %H:%M:%S'),
              "user": rawtweet["user"]["screen_name"],
              "tags": [hashtag['text'] for hashtag in rawtweet["entities"]["hashtags"]]}
     if "extended_tweet" in rawtweet:
