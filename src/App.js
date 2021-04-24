@@ -23,10 +23,11 @@ const ContentBackground = styled.div`
   position: absolute;
   top: 20%;
   background-color: #eeeeee;
-  width: 90%;
-  height: 75%;
+  width: 95%;
+  height: 90%;
   padding: 10px;
   border-radius: 10px;
+  overflow-y: auto;
 `;
 const Title = styled.h1`
   font-family: 'Josefin Sans', sans-serif;

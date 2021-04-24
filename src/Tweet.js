@@ -85,12 +85,16 @@ const getSentiment = (sentiment) => {
     Math.abs(sentiment.neu),
   );
   const res =
-    max === sentiment.neg ? (
+    max === Math.abs(sentiment.neg) ? (
       <NegativeTag>Negative</NegativeTag>
     ) : (
       <NeutralTag>Neutral</NeutralTag>
     );
-  return max === sentiment.pos ? <PositiveTag>Positive</PositiveTag> : res;
+  return max === Math.abs(sentiment.pos) ? (
+    <PositiveTag>Positive</PositiveTag>
+  ) : (
+    res
+  );
 };
 
 function Tweet() {
