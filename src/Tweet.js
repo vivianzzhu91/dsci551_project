@@ -1,8 +1,6 @@
-/* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import styled from 'styled-components';
-import elasticsearch from 'elasticsearch';
 import BoxWrapper from './util/BoxWrapper';
 
 const Item = styled.li`
@@ -74,10 +72,6 @@ const Wrapper = styled(BoxWrapper)`
   overflow-y: scroll;
 `;
 
-const client = elasticsearch.Client({
-  host: 'http://localhost:9200/',
-});
-
 const getSentiment = (sentiment) => {
   const max = Math.max(
     Math.abs(sentiment.pos),
@@ -97,45 +91,13 @@ const getSentiment = (sentiment) => {
   );
 };
 
-function Tweet() {
-  // eslint-disable-next-line no-unused-vars
-  const [myHits, setMyHits] = useState([]);
-
-  useEffect(() => {
-    client
-      .search({
-        index: 'twitter-stream',
-        from: 0,
-        size: 20,
-        body: {},
-      })
-      .then((data) => {
-        // eslint-disable-next-line prefer-destructuring
-        const hits = data.hits.hits;
-        const res = [];
-        hits.forEach((item) => {
-          const src = item._source;
-          res.push({
-            id: item._id,
-            date: src.date,
-            text: src.text,
-            user: src.user,
-            sentiment: src.sentiment,
-            tags: src.tags,
-          });
-        });
-        setMyHits(res);
-      });
-  }, []);
-
-  useEffect(() => {
-    console.log('here', myHits);
-  }, [myHits]);
+function Tweet(props) {
+  const { myHits } = props;
 
   return (
     <Wrapper className="tweet">
       <Bar>
-        <Text>Latest 20 Tweets</Text>
+        <Text>Latest {myHits.length} Tweets</Text>
       </Bar>
       <ol>
         {myHits.map((tweet) => {
@@ -150,55 +112,6 @@ function Tweet() {
             </Item>
           );
         })}
-        {/* <Item>
-          <Text>love your app!</Text>
-          <PositiveTag>Positive</PositiveTag>
-          <Tag>Covid</Tag>
-          <Date>Jan 19, 2021</Date>
-        </Item>
-        <Item>
-          <Text>It&apos;s not user friendly at all</Text>
-          <PositiveTag>Positive</PositiveTag>
-          <Tag>Online Class</Tag>
-          <Date>Jan 19, 2021</Date>
-        </Item>
-        <Item>
-          <Text>The App is coming from no where</Text>
-          <NegativeTag>Negative</NegativeTag>
-          <Date>Jan 19, 2021</Date>
-        </Item>
-        <Item>
-          <Text>
-            Is it cost-effective to write this really long long long long test
-            methods
-          </Text>
-          <PositiveTag>Positive</PositiveTag>
-          <Date>Jan 19, 2021</Date>
-        </Item>
-        <Item>
-          <Text>
-            Is it cost-effective to write this really long long long long test
-            methods
-          </Text>
-          <PositiveTag>Positive</PositiveTag>
-          <Date>Jan 19, 2021</Date>
-        </Item>
-        <Item>
-          <Text>
-            Is it cost-effective to write this really long long long long test
-            methods
-          </Text>
-          <PositiveTag>Positive</PositiveTag>
-          <Date>Jan 19, 2021</Date>
-        </Item>
-        <Item>
-          <Text>
-            Is it cost-effective to write this really long long long long test
-            methods
-          </Text>
-          <PositiveTag>Positive</PositiveTag>
-          <Date>Jan 19, 2021</Date>
-        </Item> */}
       </ol>
     </Wrapper>
   );
