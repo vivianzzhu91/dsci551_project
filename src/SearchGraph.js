@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
 import styled from 'styled-components';
-import { Line, Doughnut } from 'react-chartjs-2';
+import moment from 'moment';
+import { Scatter, Doughnut } from 'react-chartjs-2';
 import BoxWrapper from './util/BoxWrapper';
 
 const Wrapper = styled(BoxWrapper)`
@@ -19,33 +20,16 @@ const options = {
   scales: {
     xAxes: [
       {
+        ticks: {
+          userCallback(label) {
+            return moment(label).format('DD/MM/YY');
+          },
+        },
         display: true,
         scaleLabel: {
           display: true,
           labelString: 'Date',
         },
-      },
-    ],
-    yAxes: [
-      {
-        ticks: {
-          fixedStepSize: 1,
-          // eslint-disable-next-line no-unused-vars
-          callback(label, index, labels) {
-            return label;
-          },
-        },
-        gridLines: {
-          drawOnChartArea: false,
-        },
-        type: 'linear',
-        display: true,
-        scaleLabel: {
-          display: true,
-          labelString: 'Count',
-        },
-        position: 'left',
-        id: 'y-axis-1',
       },
     ],
   },
@@ -62,7 +46,7 @@ function SearchGraph(props) {
   const { searchGraphData, tagCountData } = props;
   return (
     <Wrapper>
-      <Line data={searchGraphData} options={options} />
+      <Scatter data={searchGraphData} options={options} />
       <Doughnut data={tagCountData} options={pieOptions} />
     </Wrapper>
   );

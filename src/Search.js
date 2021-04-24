@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
 import './App.css';
@@ -105,7 +106,7 @@ function Search() {
           data: [],
           fill: false,
           backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgba(255, 99, 132, 0.2)',
+          showLine: false,
           yAxisID: 'y-axis-1',
         },
         {
@@ -113,24 +114,25 @@ function Search() {
           data: [],
           fill: false,
           backgroundColor: 'rgb(54,162,235)',
-          borderColor: 'rgba(54, 162, 235, 0.2)',
+          showLine: false,
         },
         {
           label: 'Neutral',
           data: [],
           fill: false,
           backgroundColor: '#e29578',
-          borderColor: '#d4a373',
+          showLine: false,
         },
       ],
     };
     data.forEach((item) => {
       const resp = item._source;
-      const date = moment(resp.date).format('YYYY-MM-DD HH:mm');
-      result.labels.push(date);
-      result.datasets[0].data.push(resp.sentiment.pos);
-      result.datasets[1].data.push(resp.sentiment.neg);
-      result.datasets[2].data.push(resp.sentiment.neu);
+      const date = moment(resp.date).valueOf();
+      console.log(date);
+      // result.labels.push(date);
+      result.datasets[0].data.push({ x: date, y: resp.sentiment.pos });
+      result.datasets[1].data.push({ x: date, y: resp.sentiment.neg });
+      result.datasets[2].data.push({ x: date, y: resp.sentiment.neu });
     });
     setSearchGraphData(result);
   };
@@ -168,9 +170,8 @@ function Search() {
   };
 
   const getTweet = (data) => {
-    const { hits } = data.hits;
     const res = [];
-    hits.forEach((item) => {
+    data.forEach((item) => {
       const src = item._source;
       res.push({
         id: item._id,
@@ -185,8 +186,15 @@ function Search() {
   };
 
   const search = (e) => {
-    client
-      .search({
+    const startDate = new Date(time.selection.startDate);
+    const endDate = new Date(time.selection.endDate);
+    const promises = [];
+    for (
+      let date = sort === 'asc' ? startDate : endDate;
+      sort === 'asc' ? date < endDate : date > startDate;
+      date.setDate(date.getDate() + (sort === 'asc' ? 1 : -1))
+    ) {
+      const promise = client.search({
         index: 'twitter-stream',
         from: 0,
         size: limit,
@@ -197,8 +205,8 @@ function Search() {
                 {
                   range: {
                     date: {
-                      gte: new Date(time.selection.startDate).getTime(),
-                      lte: new Date(time.selection.endDate).getTime(),
+                      gte: date.getTime(),
+                      lte: moment(date).add(1, 'days').valueOf(),
                       format: 'epoch_millis',
                     },
                   },
@@ -219,14 +227,21 @@ function Search() {
           },
           sort: [{ date: { order: sort } }],
         },
-      })
-      .then((data) => {
-        convertGraphData(data.hits.hits);
-        convertDoughnutData(data.hits.hits);
-        getTweet(data);
-        setIsSearching(true);
-        // console.log(data.hits.hits);
       });
+      promises.push(promise);
+    }
+    Promise.all(promises).then((values) => {
+      const hits = [];
+      values.forEach((value) => {
+        value.hits.hits.forEach((hit) => {
+          hits.push(hit);
+        });
+      });
+      convertGraphData(hits);
+      convertDoughnutData(hits);
+      getTweet(hits);
+    });
+    setIsSearching(true);
     e.preventDefault();
   };
 
@@ -338,7 +353,7 @@ function Search() {
               <DateRangePicker
                 onChange={(item) => setTime({ ...time, ...item })}
                 months={1}
-                minDate={addDays(new Date(), -1)}
+                minDate={addDays(new Date(), -7)}
                 maxDate={new Date()}
                 direction="vertical"
                 scroll={{ enabled: true }}

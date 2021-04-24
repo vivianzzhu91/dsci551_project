@@ -70,6 +70,7 @@ const Wrapper = styled(BoxWrapper)`
   width: 100%;
   padding-right: 20px;
   overflow-y: scroll;
+  height: 100%;
 `;
 
 const getSentiment = (sentiment) => {
