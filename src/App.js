@@ -24,7 +24,7 @@ const ContentBackground = styled.div`
   top: 20%;
   background-color: #eeeeee;
   width: 95%;
-  height: 90%;
+  height: 80%;
   padding: 10px;
   border-radius: 10px;
   overflow-y: auto;

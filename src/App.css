@@ -156,3 +156,8 @@
 .option-input.radio::after {
   border-radius: 50%;
 }
+
+#dropdown {
+  padding: 5px;
+  border: 2px solid #cbc0d3;
+}

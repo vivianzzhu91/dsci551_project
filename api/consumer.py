@@ -35,13 +35,14 @@ def sentiment(tweet):
 def emotion(field):
     e = 'positive'
     scores = json.loads(field)
-    max_val = max(scores['pos'], scores['neg'], scores['neu'])
-    if max_val == scores['neg']:
+    max_val = max(abs(scores['pos']), abs(scores['neg']), abs(scores['neu']))
+    if max_val == abs(scores['neg']):
         e = 'negative'
-    elif max_val == scores['neu']:
+    elif max_val == abs(scores['neu']):
         e = 'neutral'
 
     return e
+
 
 def process(df, id):
     results = df.toJSON().map(lambda j: json.loads(j)).collect()
