@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Scatter, Doughnut } from 'react-chartjs-2';
+import { Scatter, Doughnut, Bar } from 'react-chartjs-2';
 import BoxWrapper from './util/BoxWrapper';
 
 const Wrapper = styled(BoxWrapper)`
@@ -42,12 +42,26 @@ const pieOptions = {
     display: true,
   },
 };
+
+const barOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Covid-19 Trend Over Time',
+    },
+  },
+};
 function SearchGraph(props) {
-  const { searchGraphData, tagCountData } = props;
+  const { searchGraphData, tagCountData, covidData } = props;
   return (
     <Wrapper>
       <Scatter data={searchGraphData} options={options} />
       <Doughnut data={tagCountData} options={pieOptions} />
+      <Bar data={covidData} options={barOptions} />
     </Wrapper>
   );
 }

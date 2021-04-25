@@ -10,6 +10,7 @@ import elasticsearch from 'elasticsearch';
 import moment from 'moment';
 import { addDays } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
+import { firebase } from './initFirebase';
 import BoxWrapper from './util/BoxWrapper';
 import SearchGraph from './SearchGraph';
 import Tweet from './Tweet';
@@ -52,6 +53,8 @@ const client = elasticsearch.Client({
   host: 'http://localhost:9200/',
 });
 
+const db = firebase.database();
+
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF'.split('');
   let color = '#';
@@ -80,6 +83,10 @@ function Search() {
     labels: [],
   });
   const [tagCountData, setTagCountData] = useState({
+    datasets: [],
+    labels: [],
+  });
+  const [covidData, setCovidData] = useState({
     datasets: [],
     labels: [],
   });
@@ -128,8 +135,6 @@ function Search() {
     data.forEach((item) => {
       const resp = item._source;
       const date = moment(resp.date).valueOf();
-      console.log(date);
-      // result.labels.push(date);
       result.datasets[0].data.push({ x: date, y: resp.sentiment.pos });
       result.datasets[1].data.push({ x: date, y: resp.sentiment.neg });
       result.datasets[2].data.push({ x: date, y: resp.sentiment.neu });
@@ -183,6 +188,53 @@ function Search() {
       });
     });
     setMyHits(res);
+  };
+
+  const getCovidDate = () => {
+    const ref = db.ref('/project/covid');
+    const start = moment(new Date(time.selection.startDate)).format(
+      'YYYY-MM-DD',
+    );
+    const end = moment(new Date(time.selection.endDate)).format('YYYY-MM-DD');
+    const refQuery = ref.orderByChild('date').startAt(start).endAt(end);
+    const labels = [];
+    const datasets = [
+      {
+        label: 'Cardiovasc Death Rate',
+        data: [],
+        backgroundColor: getRandomColor(),
+      },
+      {
+        label: 'Diabetes prevalence',
+        data: [],
+        backgroundColor: getRandomColor(),
+      },
+      {
+        label: 'New covid-cases in thousands',
+        data: [],
+        backgroundColor: getRandomColor(),
+      },
+      {
+        label: 'New covid-deaths',
+        data: [],
+        backgroundColor: getRandomColor(),
+      },
+    ];
+    refQuery.once('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const { key } = childSnapshot;
+        const data = childSnapshot.val();
+        labels.push(data.date);
+        datasets[0].data.push(data.cardiovasc_death_rate);
+        datasets[1].data.push(data.diabetes_prevalence);
+        datasets[2].data.push(data.new_cases / 1000);
+        datasets[3].data.push(data.new_deaths);
+      });
+    });
+    setCovidData({
+      labels,
+      datasets,
+    });
   };
 
   const search = (e) => {
@@ -240,6 +292,7 @@ function Search() {
       convertGraphData(hits);
       convertDoughnutData(hits);
       getTweet(hits);
+      getCovidDate();
     });
     setIsSearching(true);
     e.preventDefault();
@@ -386,6 +439,7 @@ function Search() {
             <SearchGraph
               searchGraphData={searchGraphData}
               tagCountData={tagCountData}
+              covidData={covidData}
             />
           </div>
           <div className="col-12">
