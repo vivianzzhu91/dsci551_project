@@ -22,7 +22,7 @@ const options = {
       {
         ticks: {
           userCallback(label) {
-            return moment(label).format('DD/MM/YY');
+            return moment(label).format('YYYY-MM-DD HH:mm:ss');
           },
         },
         display: true,
