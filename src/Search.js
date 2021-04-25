@@ -230,10 +230,10 @@ function Search() {
         datasets[2].data.push(data.new_cases / 1000);
         datasets[3].data.push(data.new_deaths);
       });
-    });
-    setCovidData({
-      labels,
-      datasets,
+      setCovidData({
+        labels,
+        datasets,
+      });
     });
   };
 
