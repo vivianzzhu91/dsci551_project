@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import moment from 'moment';
 import styled from 'styled-components';
 import BoxWrapper from './util/BoxWrapper';
 
@@ -70,7 +71,7 @@ const Wrapper = styled(BoxWrapper)`
   width: 100%;
   padding-right: 20px;
   overflow-y: scroll;
-  height: 100%;
+  height: 550px;
 `;
 
 const getSentiment = (sentiment) => {
@@ -109,7 +110,7 @@ function Tweet(props) {
               {tweet.tags.map((tag) => {
                 return <Tag key={tag}>{tag}</Tag>;
               })}
-              <Date>{tweet.date}</Date>
+              <Date>{moment(tweet.date).format('YYYY-MM-DD HH:mm:ss')}</Date>
             </Item>
           );
         })}

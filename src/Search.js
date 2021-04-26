@@ -219,6 +219,11 @@ function Search() {
         data: [],
         backgroundColor: getRandomColor(),
       },
+      {
+        label: 'New vaccinations',
+        data: [],
+        backgroundColor: getRandomColor(),
+      },
     ];
     refQuery.once('value', (snapshot) => {
       snapshot.forEach((childSnapshot) => {
@@ -229,6 +234,7 @@ function Search() {
         datasets[1].data.push(data.diabetes_prevalence);
         datasets[2].data.push(data.new_cases / 1000);
         datasets[3].data.push(data.new_deaths);
+        datasets[4].data.push(data.new_vaccinations);
       });
       setCovidData({
         labels,

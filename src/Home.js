@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
@@ -21,29 +22,41 @@ function Home() {
   const [myHits, setMyHits] = useState([]);
 
   useEffect(() => {
-    client
-      .search({
-        index: 'twitter-stream',
-        from: 0,
-        size: 20,
-        body: {},
-      })
-      .then((data) => {
-        const { hits } = data.hits;
-        const res = [];
-        hits.forEach((item) => {
-          const src = item._source;
-          res.push({
-            id: item._id,
-            date: src.date,
-            text: src.text,
-            user: src.user,
-            sentiment: src.sentiment,
-            tags: src.tags,
+    setInterval(() => {
+      client
+        .search({
+          index: 'twitter-stream',
+          size: 20,
+          body: {
+            query: {
+              match_all: {},
+            },
+            sort: [
+              {
+                date: {
+                  order: 'desc',
+                },
+              },
+            ],
+          },
+        })
+        .then((data) => {
+          const { hits } = data.hits;
+          const res = [];
+          hits.forEach((item) => {
+            const src = item._source;
+            res.push({
+              id: item._id,
+              date: src.date,
+              text: src.text,
+              user: src.user,
+              sentiment: src.sentiment,
+              tags: src.tags,
+            });
           });
+          setMyHits(res);
         });
-        setMyHits(res);
-      });
+    }, 5000);
   }, []);
   return (
     <HomeWrapper>
