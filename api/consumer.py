@@ -5,8 +5,6 @@ from pyspark.sql import SparkSession
 from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 from datetime import datetime
-import nltk
-nltk.download('vader_lexicon')
 
 
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
