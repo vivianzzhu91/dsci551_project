@@ -38,7 +38,7 @@ const Tag = styled.div`
   border: 1px solid #0077b6;
   background-color: #caf0f8;
   color: #0077b6;
-  width: 90px;
+  width: 110px;
   height: 30px;
   float: right;
   display: flex;
@@ -71,7 +71,7 @@ const Wrapper = styled(BoxWrapper)`
   width: 100%;
   padding-right: 20px;
   overflow-y: scroll;
-  height: 550px;
+  height: 770px;
 `;
 
 const getSentiment = (sentiment) => {
