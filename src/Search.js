@@ -10,7 +10,6 @@ import elasticsearch from 'elasticsearch';
 import moment from 'moment';
 import { addDays } from 'date-fns';
 import { DateRangePicker } from 'react-date-range';
-import { firebase } from './initFirebase';
 import BoxWrapper from './util/BoxWrapper';
 import SearchGraph from './SearchGraph';
 import Tweet from './Tweet';
@@ -52,8 +51,6 @@ const Wrapper = styled(BoxWrapper)`
 const client = elasticsearch.Client({
   host: 'http://localhost:9200/',
 });
-
-const db = firebase.database();
 
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF'.split('');
@@ -190,13 +187,7 @@ function Search() {
     setMyHits(res);
   };
 
-  const getCovidDate = () => {
-    const ref = db.ref('/project/covid');
-    const start = moment(new Date(time.selection.startDate)).format(
-      'YYYY-MM-DD',
-    );
-    const end = moment(new Date(time.selection.endDate)).format('YYYY-MM-DD');
-    const refQuery = ref.orderByChild('date').startAt(start).endAt(end);
+  const getCovidDate = (data) => {
     const labels = [];
     const datasets = [
       {
@@ -220,26 +211,23 @@ function Search() {
         backgroundColor: getRandomColor(),
       },
       {
-        label: 'New vaccinations',
+        label: 'New vaccinations in thousands',
         data: [],
         backgroundColor: getRandomColor(),
       },
     ];
-    refQuery.once('value', (snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        const { key } = childSnapshot;
-        const data = childSnapshot.val();
-        labels.push(data.date);
-        datasets[0].data.push(data.cardiovasc_death_rate);
-        datasets[1].data.push(data.diabetes_prevalence);
-        datasets[2].data.push(data.new_cases / 1000);
-        datasets[3].data.push(data.new_deaths);
-        datasets[4].data.push(data.new_vaccinations);
-      });
-      setCovidData({
-        labels,
-        datasets,
-      });
+    data.forEach((item) => {
+      const source = item._source;
+      labels.push(moment(source.date).format('YYYY-MM-DD'));
+      datasets[0].data.push(source.cardiovasc_death_rate);
+      datasets[1].data.push(source.diabetes_prevalence);
+      datasets[2].data.push(source.new_cases / 1000);
+      datasets[3].data.push(source.new_deaths);
+      datasets[4].data.push(source.new_vaccinations / 1000);
+    });
+    setCovidData({
+      labels,
+      datasets,
     });
   };
 
@@ -247,6 +235,8 @@ function Search() {
     const startDate = new Date(time.selection.startDate);
     const endDate = new Date(time.selection.endDate);
     const promises = [];
+    const startDateQuery = moment(startDate).add(-1, 'days').valueOf();
+    const endDateQuery = moment(endDate).valueOf();
     for (
       let date = sort === 'asc' ? startDate : endDate;
       sort === 'asc' ? date < endDate : date > startDate;
@@ -288,9 +278,35 @@ function Search() {
       });
       promises.push(promise);
     }
+    // search for covid data
+    client
+      .search({
+        index: 'covid',
+        body: {
+          query: {
+            bool: {
+              must: [
+                {
+                  range: {
+                    date: {
+                      gte: startDateQuery,
+                      lte: endDateQuery,
+                      format: 'epoch_millis',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          sort: [{ date: { order: sort } }],
+        },
+      })
+      .then((data) => {
+        getCovidDate(data.hits.hits);
+      });
     Promise.all(promises).then((values) => {
       const hits = [];
-      values.forEach((value) => {
+      values.forEach((value, i) => {
         value.hits.hits.forEach((hit) => {
           hits.push(hit);
         });
@@ -298,7 +314,6 @@ function Search() {
       convertGraphData(hits);
       convertDoughnutData(hits);
       getTweet(hits);
-      getCovidDate();
     });
     setIsSearching(true);
     e.preventDefault();
@@ -412,7 +427,7 @@ function Search() {
               <DateRangePicker
                 onChange={(item) => setTime({ ...time, ...item })}
                 months={1}
-                minDate={addDays(new Date(), -7)}
+                minDate={addDays(new Date(), -14)}
                 maxDate={new Date()}
                 direction="vertical"
                 scroll={{ enabled: true }}
