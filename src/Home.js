@@ -5,6 +5,7 @@ import './App.css';
 import styled from 'styled-components';
 
 import elasticsearch from 'elasticsearch';
+import moment from 'moment';
 import BoxWrapper from './util/BoxWrapper';
 import Tweet from './Tweet';
 import SentimentGraph from './SentimentGraph';
@@ -47,7 +48,9 @@ function Home() {
             const src = item._source;
             res.push({
               id: item._id,
-              date: src.date,
+              date: moment(src.date)
+                .add(8, 'hours')
+                .format('YYYY-MM-DD HH:mm:ss'),
               text: src.text,
               user: src.user,
               sentiment: src.sentiment,

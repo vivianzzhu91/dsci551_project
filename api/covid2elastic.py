@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
@@ -7,7 +8,6 @@ columns = ['date', 'total_cases', 'new_cases',
            'icu_patients', 'hosp_patients',
            'new_tests', 'total_tests',
            'total_vaccinations', 'new_vaccinations',
-           'median_age',
            'cardiovasc_death_rate', 'diabetes_prevalence']
 
 esclient = Elasticsearch(['localhost:9200'], timeout=30)
@@ -15,6 +15,7 @@ esclient = Elasticsearch(['localhost:9200'], timeout=30)
 df = pd.read_csv('data/owid-covid-data.csv')
 df = df[df['iso_code'] == 'USA']
 df = df[columns]
+df.replace(np.nan, 0, inplace=True)
 df.dropna(inplace=True)
 
 actions = []
