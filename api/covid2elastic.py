@@ -5,7 +5,6 @@ from elasticsearch import Elasticsearch, helpers
 
 columns = ['date', 'total_cases', 'new_cases',
            'total_deaths', 'new_deaths',
-           'icu_patients', 'hosp_patients',
            'new_tests', 'total_tests',
            'total_vaccinations', 'new_vaccinations',
            'cardiovasc_death_rate', 'diabetes_prevalence']
@@ -29,6 +28,6 @@ for idx in df.index:
     })
 
 for ok, response in helpers.streaming_bulk(client=esclient, actions=actions, index='covid',
-                                               max_retries=5, raise_on_error=False, raise_on_exception=False):
+                                           max_retries=5, raise_on_error=False, raise_on_exception=False):
     if not ok:
         print(response)

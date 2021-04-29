@@ -8,13 +8,14 @@ from tweepy.streaming import StreamListener
 import json
 
 # toolchains related
-ACCESS_TOKEN = '2742496888-fINdHoxVW6UVxDHj14Kvqe8bcBxYFzakysyUAZb'
-ACCESS_TOKEN_SECRET = '6TLUo7i7jKBJZbaZHVJHJ89wJhB7OkGICneJLbxLiEIFi'
-API_KEY = 'Eq6l9WuEAylcx8suSQrEDXBHH'
-API_SECRET = 'HkyPATudXLgcn7LUryVzO38ehfvoGICftU6b28whcaiRMVwCgq'
+ACCESS_TOKEN = 'YOUR ACCESS TOKEN'
+ACCESS_TOKEN_SECRET = 'YOU ACCESS TOKEN SECRET'
+API_KEY = 'YOUR API KEY'
+API_SECRET = 'YOUR API SECRET'
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 
 # const strings
+WEEK_IN_SECONDS = 604800
 TAGS = ['#Coronavirus', '#SARSCoV2', '#quarantinelife', '#stayathomechallenge',
         '#canceleverything', '#flattenthecurve', '#lockdown', '#pandemic', 'workfromhome',
         '#frontlineworkers', '#wearamask', 'WearAMask', '#OnlineClasses', '#Onlineclass']
